@@ -2,6 +2,7 @@ package cn.com.springboot.cloud.controller;
 
 import cn.com.springboot.cloud.domain.entity.User;
 import cn.com.springboot.cloud.domain.service.UserService;
+import com.netflix.hystrix.HystrixCommand;
 import lombok.extern.log4j.Log4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
