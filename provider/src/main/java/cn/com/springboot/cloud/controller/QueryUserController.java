@@ -20,10 +20,26 @@ public class QueryUserController {
     private UserService userService;
 
     @GetMapping("/queryUser")
-    public User queryByUserNo(@RequestParam("userNo") String userNo){
-        if(log.isDebugEnabled()){
+    public User queryByUserNo(@RequestParam("userNo") String userNo) {
+        if (log.isDebugEnabled()) {
             log.info("i find you");
         }
-        return userService.getUserByUserNo(userNo);
+        HystrixCommand<User> warppedUserService = new HystrixCommand<User>() {
+            @Override
+            protected User run() throws Exception {
+                return userService.getUserByUserNo(userNo);
+            }
+
+            @Override
+            protected User getFallback() {
+                return queryFromCache(userNo);
+            }
+        };
+
+        return warppedUserService.execute();
+    }
+
+    private User queryFromCache(String userNo) {
+        return new User();
     }
 }
